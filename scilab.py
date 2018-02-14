@@ -47,10 +47,31 @@ output args
 
 @author: vincent.guffens@gmail.com
 """
+from ctypes import cdll
+import os
+
+"""
+def detectJVM(jvm):
+	for root, dirs, fileso in os.walk(jvm):
+		for dir in dirs:
+			basePath=root+"/"+dir
+			pathJVM=basePath+'/server/libjvm.so'
+			if os.path.exists(pathJVM):
+				cdll.LoadLibrary(pathJVM)
+				cdll.LoadLibrary(basePath+"/libjava.so")
+				return True
+
+for jvm in ['/usr/lib/jvm/default-java/','/usr/lib/jvm/java-6-openjdk/','/usr/lib/jvm/java-8-oracle/']:
+	if detectJVM(jvm) == True:
+		break
+"""		
+
+cdll.LoadLibrary("/usr/lib/scilab/libscilab.so.0")
+os.putenv("SCI","/usr/share/scilab")
 
 from sciscipy import write, read, eval
 from threading import Thread
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 import os
 import sys
@@ -89,13 +110,13 @@ def update_scilab_func(filename = None):
 
 
     if not os.path.exists(filename):
-        raise ValueError, "can not open file: " + filename
+        raise ValueError("can not open file: " + filename)
 
     parser = ConfigParser()
     parser.read(filename)
 
     if not parser.has_section(SECTION_CONFIG):
-        raise ValueError, "Invalid config file"
+        raise ValueError("Invalid config file")
 
     items = parser.items(SECTION_CONFIG)
 
@@ -110,7 +131,7 @@ def run_scilab_cmd(cmd_str):
     ier = read("_ier_")
     if ier != 0 and ier != [0]:
         lasterror = read("_er_msg_")
-        raise ScilabError, lasterror
+        raise ScilabError(lasterror)
 
 
 def find_scilab_type(var_name):
@@ -122,7 +143,7 @@ def find_scilab_type(var_name):
     @return: type(var_name)
     """
     if type(var_name) != type(""):
-        raise TypeError, "var_name must be a string"
+        raise TypeError("var_name must be a string")
 
     run_scilab_cmd("_tmp1_ = type(" + var_name + ")")
     res = read("_tmp1_")
@@ -146,7 +167,7 @@ def find_output_param(macro_name):
     @rtype: integer
     """
     if type(macro_name) != type(""):
-        raise TypeError, "macro_name must be a string"
+        raise TypeError("macro_name must be a string")
 
     if macro_name in __known_func.keys():
         return __known_func[macro_name]
@@ -169,7 +190,7 @@ class Functor(object):
 
     def __init__(self, name):
         if type(name) != type(""):
-            raise TypeError, "name must be a string"
+            raise TypeError("name must be a string")
 
         self.name = name
 

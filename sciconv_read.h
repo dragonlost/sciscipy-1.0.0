@@ -18,7 +18,7 @@
 */
 
 
-
+#define NPY_NO_DEPRECATED_API NPY_API_VERSION
 
 #ifndef SCICONV_READ
 #define SCICONV_READ

@@ -39,6 +39,7 @@ static int Initialize(void)
         char sci[sci_max_len] ;
         res = StartScilab(get_SCI(sci), NULL, 0) ;
     }
+	/*res = StartScilab("/usr/share/scilab/", NULL, 0) ;*/
 #endif
 
     if (res == FALSE)
@@ -124,12 +125,12 @@ sciscipy_eval (PyObject *self, PyObject *args)
 
     SendScilabJob(name);
 
-    //	while ( ScilabHaveAGraph() )
-    //	{
+    	while ( ScilabHaveAGraph() )
+    	{
     //		Py_BEGIN_ALLOW_THREADS
-    //		ScilabDoOneEvent() ;
+    		ScilabDoOneEvent() ;
     //		Py_END_ALLOW_THREADS
-    //	}
+    	}
 
     Py_INCREF(Py_None);
     return Py_None;

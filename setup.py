@@ -29,13 +29,13 @@ elif os.name == 'posix':
 	sci_librairies = []
         sci_extra_link_args = ['-Wl,--no-as-needed',  '-lscilab',  '-lscicall_scilab', '-lsciconsole', '-lscilocalization',  '-lscihistory_manager', '-lscihistory_browser', '-lscigraphics', '-lscicompletion', '-lscifunctions', '-lscicommons']
 else:
-	raise NotImplementedError, "Only 'nt' and 'posix' are supported"
+	raise NotImplementedError("Only 'nt' and 'posix' are supported")
 
 sci_sources = ['sciscipy.c', 'sciconv_read.c', 'sciconv_write.c', 'util.c']
 
 if os.environ.get('SCI'):
 	common_include_base_call=os.path.join("/",os.environ.get('SCI'),"..","..","include","scilab")
-        sci_include.append(os.path.join("/", common_include_base_call))
+	sci_include.append(os.path.join("/", common_include_base_call))
 	sci_include.append(os.path.join("/", common_include_base_call, "core"))
 	sci_include.append(os.path.join("/",common_include_base_call, "call_scilab"))
 	sci_lib_dir.append(os.path.join("/",os.environ.get('SCI'),"..","..","lib","scilab"))
@@ -53,7 +53,7 @@ if sys.version_info[0] >= 3:
 try:
     import numpy
     import numpy.distutils.misc_util as misc
-    sci_include += os.path.join(misc.get_numpy_include_dirs())
+    sci_include.append(os.path.join(misc.get_numpy_include_dirs()[0]))
     numpy_is_avail = 1
     sci_sources += ['deallocator.c']
 except ImportError:
@@ -110,7 +110,7 @@ The function func in sci.func(x, y) can be a Scilab built-in or any user
 defined function so that Scilab libraries can be reused easily in python.
 """
 setup (	name = 'sciscipy',
-       	version = '1.0.0',
+       	version = '1.0.2',
 	author = 'Vincent Guffens <vincent.guffens@gmail.com>, Sylvestre Ledru <sylvestre.ledru@scilab-enterprises.com>',
 	url = "http://forge.scilab.org/index.php/p/sciscipy/",
 	license = "GPL",

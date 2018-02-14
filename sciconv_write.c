@@ -44,7 +44,7 @@ static int write_listofstring(char *name, PyObject *obj)
     for (i = 0; i < n; ++i)
     {
         item = PyList_GetItem(obj, i) ;
-        str_item = PyString_AsString(item) ;
+        str_item = PyUnicode_AsUTF8(item) ;
         tot_size += strlen(str_item) ;
     }
 
@@ -59,7 +59,7 @@ static int write_listofstring(char *name, PyObject *obj)
     for (i = 0; i < n; ++i)
     {
         item = PyList_GetItem(obj, i) ;
-        str_item = PyString_AsString(item) ;
+        str_item = PyUnicode_AsUTF8(item) ;
         strcpy(ptr, "'") ;
         ptr++ ;
         strcpy(ptr, str_item) ;
@@ -86,7 +86,7 @@ static int test_listofstring(PyObject *obj)
     PyObject *item ;
     int n ;
 
-    if (PyString_Check(obj))
+    if (PyUnicode_Check(obj))
     {
         sci_debug("[sciconv_write] Match for list of string\n") ;
         return 1 ;
@@ -102,7 +102,7 @@ static int test_listofstring(PyObject *obj)
 
         item = PyList_GetItem(obj, 0) ;
 
-        if (PyString_Check(item))
+        if (PyUnicode_Check(item))
         {
             sci_debug("[sciconv_write] Match for list of string\n") ;
             return 1 ;
@@ -158,7 +158,7 @@ static int write_listoflist(char *name, PyObject *obj)
                 continue ;
             }
 
-            if (PyFloat_Check(element) || PyLong_Check(element) || PyInt_Check(element))
+            if (PyFloat_Check(element) || PyLong_Check(element) || PyLong_Check(element))
             {
                 new_vec[j * m + i] = PyFloat_AsDouble(element) ;
                 continue ;
@@ -228,7 +228,7 @@ static int test_listoflist(PyObject *obj)
         will fail later on if all items are not real or
         complex (This is for performance)
     */
-    if (PyFloat_Check(el) || PyLong_Check(el) || PyComplex_Check(el) || PyInt_Check(el))
+    if (PyFloat_Check(el) || PyLong_Check(el) || PyComplex_Check(el) || PyLong_Check(el))
     {
         sci_debug("[sciconv_write] Match for list of list\n") ;
         return 1 ;
@@ -283,7 +283,7 @@ static int write_listofdouble(char *name, PyObject *obj)
             continue ;
         }
 
-        if (PyFloat_Check(element) || PyLong_Check(element) || PyInt_Check(element))
+        if (PyFloat_Check(element) || PyLong_Check(element) || PyLong_Check(element))
         {
             new_vec[i] = PyFloat_AsDouble(element) ;
             continue ;
@@ -330,7 +330,7 @@ static int test_listofdouble(PyObject *obj)
     PyObject *item ;
     int n ;
 
-    if (PyFloat_Check(obj) || PyLong_Check(obj) || PyComplex_Check(obj) || PyInt_Check(obj))
+    if (PyFloat_Check(obj) || PyLong_Check(obj) || PyComplex_Check(obj) || PyLong_Check(obj))
     {
         sci_debug("[sciconv_write] Match for list of double\n") ;
         return 1 ;
@@ -346,7 +346,7 @@ static int test_listofdouble(PyObject *obj)
 
         item = PyList_GetItem(obj, 0) ;
 
-        if (PyFloat_Check(item) || PyLong_Check(item) || PyComplex_Check(item) || PyInt_Check(item))
+        if (PyFloat_Check(item) || PyLong_Check(item) || PyComplex_Check(item) || PyLong_Check(item))
         {
             sci_debug("[sciconv_write] Match for list of double\n") ;
             return 1 ;
@@ -479,8 +479,8 @@ static int write_tlist(char *name, PyObject *obj)
     sciErr = createNamedTList(pvApiCtx, name, nb_item, &tlist_address) ;
     PyObject *key, *value;
     Py_ssize_t pos = 0;
-    PyObject *py_str_to_create = PyString_FromString("[") ;
-    PyObject *py_value_str = PyString_FromString("") ;
+    PyObject *py_str_to_create = PyUnicode_FromString("[") ;
+    PyObject *py_value_str = PyUnicode_FromString("") ;
     printf("Entering write 1\n") ;
     if (sciErr.iErr)
     {
@@ -494,22 +494,22 @@ static int write_tlist(char *name, PyObject *obj)
     while (PyDict_Next(obj, &pos, &key, &value))
     {
         char *str_key = NULL ;
-        if (!PyString_Check(key))
+        if (!PyUnicode_Check(key))
         {
             return -1 ;
         }
 
-        str_key = PyString_AsString(key) ;
+        str_key = PyUnicode_AsUTF8(key) ;
 
         if (strcmp(str_key, TLIST_NAME) == 0)
         {
-            if (!PyString_Check(value))
+            if (!PyUnicode_Check(value))
             {
                 return -1 ;
             }
-            PyString_Concat(&py_str_to_create,  PyString_FromString("\"")) ;
-            PyString_Concat(&py_str_to_create, value) ;
-            PyString_Concat(&py_str_to_create,  PyString_FromString("\"")) ;
+            PyUnicode_Concat(&py_str_to_create,  PyUnicode_FromString("\"")) ;
+            PyUnicode_Concat(&py_str_to_create, value) ;
+            PyUnicode_Concat(&py_str_to_create,  PyUnicode_FromString("\"")) ;
         }
         printf("Entering write i\n") ;
     }
@@ -518,26 +518,26 @@ static int write_tlist(char *name, PyObject *obj)
     while (PyDict_Next(obj, &pos, &key, &value))
     {
         char *str_key = NULL ;
-        if (!PyString_Check(key))
+        if (!PyUnicode_Check(key))
         {
             return -1 ;
         }
 
-        str_key = PyString_AsString(key) ;
+        str_key = PyUnicode_AsUTF8(key) ;
         if (strcmp(str_key, TLIST_NAME) != 0)
         {
             char rnd_name[BUFSIZE] ;
-            PyString_Concat(&py_str_to_create,  PyString_FromString(",\"")) ;
-            PyString_Concat(&py_str_to_create, key) ;
-            PyString_Concat(&py_str_to_create,  PyString_FromString("\"")) ;
+            PyUnicode_Concat(&py_str_to_create,  PyUnicode_FromString(",\"")) ;
+            PyUnicode_Concat(&py_str_to_create, key) ;
+            PyUnicode_Concat(&py_str_to_create,  PyUnicode_FromString("\"")) ;
             // TODO
             // write(rnd_name, value)
             snprintf(rnd_name, BUFSIZE - 1, ",rnd_var__%i", rand()) ;
-            PyString_Concat(&py_value_str, PyString_FromString(rnd_name)) ;
+            PyUnicode_Concat(&py_value_str, PyUnicode_FromString(rnd_name)) ;
         }
     }
-    PyString_Concat(&py_str_to_create, PyString_FromString("]")) ;
-    printf("%s = tlist(%s%s)\n", name, PyString_AsString(py_str_to_create), PyString_AsString(py_value_str)) ;
+    PyUnicode_Concat(&py_str_to_create, PyUnicode_FromString("]")) ;
+    printf("%s = tlist(%s%s)\n", name, PyUnicode_AsUTF8(py_str_to_create), PyUnicode_AsUTF8(py_value_str)) ;
     // creates a string name = tlist(['a_name', 'var1', ..., 'varN'], var1,..., varN)
     // eval the string
 
@@ -546,7 +546,7 @@ static int write_tlist(char *name, PyObject *obj)
 
 static int test_dict_tlist(PyObject *obj)
 {
-    PyObject *py_list_name = PyString_FromString(TLIST_NAME) ;
+    PyObject *py_list_name = PyUnicode_FromString(TLIST_NAME) ;
     if (PyDict_Check(obj) && PyDict_Contains(obj, py_list_name))
     {
         sci_debug("[sciconv_write] Match for tlist\n") ;
