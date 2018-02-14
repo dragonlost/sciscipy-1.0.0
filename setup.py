@@ -27,7 +27,7 @@ elif os.name == 'posix':
 			  ]
 	sci_lib_dir = [os.path.join("/","usr", "lib", "scilab")]
 	sci_librairies = []
-        sci_extra_link_args = ['-Wl,--no-as-needed',  '-lscilab',  '-lscicall_scilab', '-lsciconsole', '-lscilocalization',  '-lscihistory_manager', '-lscihistory_browser', '-lscigraphics', '-lscicompletion', '-lscifunctions', '-lscicommons']
+	sci_extra_link_args = ['-Wl,--no-as-needed',  '-lscilab',  '-lscicall_scilab', '-lsciconsole', '-lscilocalization',  '-lscihistory_manager', '-lscihistory_browser', '-lscigraphics', '-lscicompletion', '-lscifunctions', '-lscicommons']
 else:
 	raise NotImplementedError("Only 'nt' and 'posix' are supported")
 
